@@ -2,19 +2,19 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div id="container">
-        
+
         <div id="title">
             <h1>Is it raining in Australia today?</h1>
         </div>
 
-        <div id="weather-status-container">
+        <div id="weather-status">
             <div id="raining-emoji">
                 <h1>🌧️</h1>
-            </div>
+        </div>
 
         <div id="temperature">
             <p>28°C / 82°F</p>
@@ -30,27 +30,27 @@
         </div>
 
         <div id="days-container">
-            <div id="day">
+            <div class="day">
                 <p>🌧️</p>
                 <h3>07.06</h3>
             </div>
 
-            <div id="day">
+            <div class="day">
                 <p>☀️</p>
                 <h3>08.06</h3>
             </div>
 
-            <div id="day">
+            <div class="day">
                 <p>🌧️</p>
                 <h3>09.06</h3>
             </div>
 
-            <div id="day">
+            <div class="day">
                 <p>🌧️</p>
                 <h3>10.06</h3>
             </div>
 
-            <div id="day">
+            <div class="day">
                 <p>☀️</p>
                 <h3>11.06</h3>
             </div>
