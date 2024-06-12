@@ -8,6 +8,7 @@ body {
     background-color: #08002e;
     margin: 0;
     font-family: 'Open Sans', sans-serif;
+    user-select: none;
 }
 
 #container {
@@ -19,7 +20,7 @@ body {
     padding: 25px;
 }
 
-#weather-status-container {
+#weather-status {
     text-align: center;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -71,7 +72,7 @@ body {
     margin: 0;
 }
 
-#day p {
+.day p {
     margin-top: 0;
     font-size: 45px;
     border-top: 0;
@@ -81,7 +82,7 @@ body {
     margin-bottom: 0;
 }
 
-#day h3 {
+.day h3 {
     font-size: 15px;
     font-weight: 50;
 }
