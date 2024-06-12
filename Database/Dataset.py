@@ -37,7 +37,8 @@ class Dataset:
     def drop_unused_columns(self):
         self.__data = self.__data.drop(
             columns=["Rainfall", "Evaporation", "Sunshine", "WindDir9am", "WindDir3pm", "WindSpeed9am", "WindSpeed3pm",
-                     "Cloud9am", "Cloud3pm", "Temp9am", "Temp3pm"])
+                     "Cloud9am", "Cloud3pm", "Temp9am", "Temp3pm", "RainTomorrow"]
+        )
 
     def get_data(self):
         return self.__data.to_dict(orient='records')

@@ -15,10 +15,9 @@ class Database:
             MaxTemp REAL,
             WindGustDir REAL,
             WindGustSpeed REAL,
-            RainToday TEXT,
-            RainTomorrow TEXT,
             Humidity REAL,
-            Pressure REAL
+            Pressure REAL,
+            RainToday TEXT
         );
         """
         self.cursor.execute(querry)
@@ -27,8 +26,8 @@ class Database:
     def insert_data(self, data):
         for row in data:
             self.cursor.execute(
-                "INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, RainToday, RainTomorrow, Humidity, Pressure) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (row['Date'], row['Location'], row['MinTemp'], row['MaxTemp'], row['WindGustDir'], row['WindGustSpeed'], row['RainToday'], row['RainTomorrow'], row['Humidity'], row['Pressure'])
+                "INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, RainToday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (row['Date'], row['Location'], row['MinTemp'], row['MaxTemp'], row['WindGustDir'], row['WindGustSpeed'], row['Humidity'], row['Pressure'], row['RainToday'])
             )
         self.connection.commit()
 
