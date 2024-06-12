@@ -40,5 +40,8 @@ class Dataset:
                      "Cloud9am", "Cloud3pm", "Temp9am", "Temp3pm", "RainTomorrow"]
         )
 
+    def convert_rain_today(self):
+        self.__data["RainToday"] = self.__data["RainToday"].map({"No": 0, "Yes": 1})
+
     def get_data(self):
         return self.__data.to_dict(orient='records')

@@ -17,7 +17,7 @@ class Database:
             WindGustSpeed REAL,
             Humidity REAL,
             Pressure REAL,
-            RainToday TEXT
+            RainToday REAL
         );
         """
         self.cursor.execute(querry)
@@ -30,6 +30,7 @@ class Database:
                 (row['Date'], row['Location'], row['MinTemp'], row['MaxTemp'], row['WindGustDir'], row['WindGustSpeed'], row['Humidity'], row['Pressure'], row['RainToday'])
             )
         self.connection.commit()
+
 
     def __del__(self):
         self.connection.close()

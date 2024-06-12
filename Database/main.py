@@ -9,6 +9,7 @@ if __name__ == '__main__':
     dataset.convert_wind_to_degree()
     dataset.convert_humidity()
     dataset.convert_pressure()
+    dataset.convert_rain_today()
 
     data = dataset.get_data()
 
