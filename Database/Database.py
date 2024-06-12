@@ -1,5 +1,10 @@
 import sqlite3 as sql
 
+class weather_record:
+    def __init__(self, date, rain_today):
+        self.date = date
+        self.rain_today = rain_today
+
 class Database:
 
     def __init__(self):
@@ -30,6 +35,18 @@ class Database:
                 (row['Date'], row['Location'], row['MinTemp'], row['MaxTemp'], row['WindGustDir'], row['WindGustSpeed'], row['Humidity'], row['Pressure'], row['RainToday'])
             )
         self.connection.commit()
+
+    def get_days_between(self, start, end):
+        self.cursor.execute("SELECT [DATE], RainToday "
+                            "FROM weather WHERE Date BETWEEN ? AND ? "
+                            "ORDER BY Date ASC", (start, end))
+        rows = self.cursor.fetchall()
+        days = []
+        for row in rows:
+            day = weather_record(row[0], row[1])
+            days.append(day)
+            print(row)
+        return days
 
     def __del__(self):
         self.connection.close()

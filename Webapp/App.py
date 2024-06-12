@@ -30,6 +30,8 @@ def index():
     last_day = today - datetime.timedelta(days=5)
 
     db = Database()
+    db.get_days_between(last_day, today)
+
 
     return render_template('index.html')
 
