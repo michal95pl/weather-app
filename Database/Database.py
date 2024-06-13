@@ -1,4 +1,11 @@
 import sqlite3 as sql
+import datetime
+
+class weather_record:
+    def __init__(self, date, rain_today):
+        self.date = date
+        self.rain_today = rain_today
+
 
 class Database:
 
@@ -27,10 +34,35 @@ class Database:
         for row in data:
             self.cursor.execute(
                 "INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, RainToday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (row['Date'], row['Location'], row['MinTemp'], row['MaxTemp'], row['WindGustDir'], row['WindGustSpeed'], row['Humidity'], row['Pressure'], row['RainToday'])
+                (row['Date'], row['Location'], row['MinTemp'], row['MaxTemp'], row['WindGustDir'], row['WindGustSpeed'],
+                 row['Humidity'], row['Pressure'], row['RainToday'])
             )
         self.connection.commit()
 
+    def get_days_between(self, start, end):
+        self.cursor.execute("SELECT [DATE], RainToday "
+                            "FROM weather WHERE Date BETWEEN ? AND ? "
+                            "ORDER BY Date ASC", (start, end))
+        rows = self.cursor.fetchall()
+        days = []
+        for row in rows:
+            day = weather_record(row[0], row[1])
+            days.append(day)
+        return days
+
+    def check_if_exists_today(self):
+        today = datetime.date.today()
+        self.cursor.execute("SELECT [DATE], MaxTemp, MinTemp, RainToday FROM weather WHERE Date = ?", (today,))
+        rows = self.cursor.fetchall()
+
+        if len(rows) != 0:
+            return rows[0][0], rows[0][1], rows[0][2], rows[0][3]
+        else:
+            return None
+
+    def execute_sql_query(self, query):
+        self.cursor.execute(query)
+        self.connection.commit()
 
     def __del__(self):
         self.connection.close()

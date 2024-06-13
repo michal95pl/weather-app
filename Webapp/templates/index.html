@@ -13,13 +13,19 @@
 
         <div id="weather-status">
             <div id="raining-emoji">
-                <h1>🌧️</h1>
+                {% if raintoday == 1.0 %}
+                    <h1>🌧️</h1>
+                {% else %}
+                    <h1>☀️</h1>
+                {% endif %}
         </div>
 
         <div id="temperature">
-            <p>28°C / 82°F</p>
-            <h3>City: Canberra</h3>
+            <p class="min">{{ mintemp }}°C </p>
+            <p>/</p>
+            <p class="max"> {{ maxtemp }}°C</p>
         </div>
+        <h3>City: {{ city }}</h3>
 
     </div>
 
@@ -30,30 +36,16 @@
         </div>
 
         <div id="days-container">
+            {% for day in days %}
             <div class="day">
-                <p>🌧️</p>
-                <h3>07.06</h3>
+                {% if day.rain_today == 1.0 %}
+                    <p>🌧️</p>
+                {% else %}
+                    <p>☀️</p>
+                {% endif %}
+                <h3>{{ day.date }}</h3>
             </div>
-
-            <div class="day">
-                <p>☀️</p>
-                <h3>08.06</h3>
-            </div>
-
-            <div class="day">
-                <p>🌧️</p>
-                <h3>09.06</h3>
-            </div>
-
-            <div class="day">
-                <p>🌧️</p>
-                <h3>10.06</h3>
-            </div>
-
-            <div class="day">
-                <p>☀️</p>
-                <h3>11.06</h3>
-            </div>
+            {% endfor %}
 
         </div>
     </div>
