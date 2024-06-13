@@ -1,15 +1,23 @@
 import pandas as pd
 import sqlite3 as sql
 
-
 class Dataset:
     def __init__(self):
         self.__conn = sql.connect("../weather.db")
         self.__cursor = self.__conn.cursor()
+        self.__data = pd.read_sql_query("SELECT * FROM weather", self.__conn)
+        self.__data = self.__data.dropna()
+
 
     def __del__(self):
         self.__conn.close()
 
+    def show_correlation(self):
+        print("Correlation RainToday:")
+        corr_data = self.__data.drop(["Date", "Location"], axis=1)
+        corr_matrix = corr_data.corr()
+        print(corr_matrix["RainToday"].sort_values(ascending=False))
+        print()
+
     def get_data(self) -> pd.DataFrame:
-        df = pd.read_sql_query("SELECT * FROM weather", self.__conn)
-        return df
+        return self.__data
