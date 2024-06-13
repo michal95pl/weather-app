@@ -1,4 +1,7 @@
 import datetime
+import threading
+import time
+
 import joblib
 import numpy as np
 import requests
@@ -6,7 +9,6 @@ from flask import Flask, render_template, jsonify
 from Database.Database import Database
 
 app = Flask(__name__)
-
 openweather_API_KEY = 'af498f5cac3691870fb684b490ad9408'
 city = 'Canberra'
 
@@ -73,23 +75,13 @@ def predict():
             return jsonify({'error': f'Failed to load model: {str(e)}'}), 500
 
         try:
-            prediction = model.predict(input_data)
-            db.execute_sql_query(f"INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, RainToday) VALUES "
-                                 f"('{datetime.date.today()}', "
-                                 f"'{city}', "
-                                 f"{min_temp}, "
-                                 f"{max_temp}, "
-                                 f"{wind_dir}, "
-                                 f"{wind_speed}, "
-                                 f"{humidity}, "
-                                 f"{pressure}, "
-                                 f"{prediction[0]})")
+            prediction = predict_and_insert(model, input_data, db, min_temp, max_temp, wind_dir, wind_speed, humidity, pressure)
 
         except Exception as e:
             return jsonify({'error': f'Failed to make prediction: {str(e)}'}), 500
 
         return jsonify({
-            'RainToday': prediction[0],
+            'RainToday': prediction,
             'MinTemp': min_temp,
             'MaxTemp': max_temp
         })
@@ -98,4 +90,34 @@ def predict():
         return jsonify({'error': 'Failed to fetch data from OpenWeather API'}), 500
 
 
-app.run(host='localhost', port=5050)
+def predict_and_insert(model, input_data, db, min_temp, max_temp, wind_dir, wind_speed, humidity, pressure):
+    prediction = model.predict(input_data)
+    db.execute_sql_query(
+        f"INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, RainToday) VALUES "
+        f"('{datetime.date.today()}', "
+        f"'{city}', "
+        f"{min_temp}, "
+        f"{max_temp}, "
+        f"{wind_dir}, "
+        f"{wind_speed}, "
+        f"{humidity}, "
+        f"{pressure}, "
+        f"{prediction[0]})")
+
+    return prediction[0]
+
+
+def automatic_add():
+    while True:
+        if datetime.datetime.now().time().hour == 6:
+            url = f"http://localhost:5050/predict"
+            response = requests.get(url)
+            time.sleep(7200)
+        time.sleep(300)
+
+
+if __name__ == '__main__':
+    update_thread = threading.Thread(target=automatic_add())
+    update_thread.start()
+    app.run(host='localhost', port=5050)
+
