@@ -108,6 +108,7 @@ def predict_and_insert(model, input_data, db, min_temp, max_temp, wind_dir, wind
 
 
 def automatic_add():
+    print("Updating thread started.")
     while True:
         if datetime.datetime.now().time().hour == 6:
             url = f"http://localhost:5050/predict"
@@ -117,7 +118,7 @@ def automatic_add():
 
 
 if __name__ == '__main__':
-    update_thread = threading.Thread(target=automatic_add())
+    update_thread = threading.Thread(target=automatic_add)
     update_thread.start()
     app.run(host='localhost', port=5050)
 
