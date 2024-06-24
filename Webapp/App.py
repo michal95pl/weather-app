@@ -184,6 +184,8 @@ def get_midday_weather_values():
 
 
 if __name__ == '__main__':
-    update_thread = threading.Thread(target=automatic_add)
-    update_thread.start()
+    update_thread1 = threading.Thread(target=automatic_add)
+    update_thread1.start()
+    update_thread2 = threading.Thread(target=get_midday_weather_values())
+    update_thread2.start()
     app.run(host='localhost', port=5050)
