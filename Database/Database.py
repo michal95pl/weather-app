@@ -40,6 +40,21 @@ class Database:
             )
         self.connection.commit()
 
+    def insert_single_record_weather(self, date, location, mintemp, maxtemp, windgustdir, windgustspeed, humidity, pressure, raintoday):
+        self.cursor.execute(
+            "INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, "
+            "RainToday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (date, location, mintemp, maxtemp, windgustdir, windgustspeed, humidity, pressure, raintoday)
+        )
+        self.connection.commit()
+
+    def insert_single_record_vote(self, date, ip, decision):
+        self.cursor.execute(
+            "INSERT INTO vote (date, ip, decision) VALUES (?, ?, ?)",
+            (date, ip, decision)
+        )
+        self.connection.commit()
+
     def get_days_between(self, start, end):
         self.cursor.execute("SELECT [DATE], RainToday "
                             "FROM weather WHERE Date BETWEEN ? AND ? "

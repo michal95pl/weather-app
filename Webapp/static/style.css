@@ -29,7 +29,7 @@ body {
 
 #weather-status h2 {
     margin-top: 15px;
-    font-size: 37px;
+    font-size: 22px;
     font-weight: 280;
     margin-bottom: 10px;
 }
@@ -43,7 +43,7 @@ body {
 }
 
 #days-status-container h1 {
-    font-size: 37px;
+    font-size: 22px;
     font-weight: 280;
 }
 
@@ -75,7 +75,7 @@ body {
 }
 
 #title h1 {
-    font-size: 47px;
+    font-size: 30px;
     font-weight: 250;
     margin-top: 0;
 }
@@ -120,7 +120,7 @@ body {
 
 #vote-container h1 {
     margin-top: 15px;
-    font-size: 37px;
+    font-size: 22px;
     font-weight: 280;
     margin-bottom: 10px;
 }
