@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #08002e;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    user-select: none;
+}
+
+#container {
+    display: flex;
+    background-color: #b1b1b1;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.322);
+    flex-direction: column;
+    padding: 25px;
+}
+
+#thank-you {
+    text-align: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+#thank-you h1 {
+    font-size: 37px;
+    font-weight: 280;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+#vote-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#vote-container button {
+    color: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    background-color: #333;
+}
+
+#vote-container button:hover {
+    background-color: #555;
+    transform: scale(1.05);
+}

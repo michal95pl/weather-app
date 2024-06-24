@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Is it raining in Australia today?</title>
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
 </head>
 <body>
     <div id="container">
@@ -12,11 +14,20 @@
         </div>
 
         <div id="weather-status">
+            <h2>
+                Ai tells:
+            </h2>
             <div id="raining-emoji">
                 {% if raintoday == 1.0 %}
                     <h1>🌧️</h1>
+                    <h3>
+                        Yes.
+                    </h3>
                 {% else %}
                     <h1>☀️</h1>
+                     <h3>
+                        No.
+                    </h3>
                 {% endif %}
         </div>
 
@@ -26,8 +37,23 @@
             <p class="max"> {{ maxtemp }}°C</p>
         </div>
         <h3>City: {{ city }}</h3>
-
     </div>
+
+    {% if not isvoted %}
+    <div id="vote-container">
+        <h1>
+            Is it true?
+        </h1>
+
+        <button id="yes-button" onclick="window.location.href='http://localhost:5050/vote-yes'">
+            <h1>👍 Yes</h1>
+        </button>
+
+        <button id="no-button" onclick="window.location.href='http://localhost:5050/vote-yes'">
+            <h1>No 👎</h1>
+        </button>
+    </div>
+    {% endif %}
 
     <div id="days-status-container">
 

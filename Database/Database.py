@@ -1,6 +1,7 @@
 import sqlite3 as sql
 import datetime
 
+
 class weather_record:
     def __init__(self, date, rain_today):
         self.date = date
@@ -50,15 +51,38 @@ class Database:
             days.append(day)
         return days
 
-    def check_if_exists_today(self):
+    def check_if_weather_exists_today(self):
         today = datetime.date.today()
-        self.cursor.execute("SELECT [DATE], MaxTemp, MinTemp, RainToday FROM weather WHERE Date = ?", (today,))
+        self.cursor.execute("SELECT * FROM weather WHERE Date = ?", (today,))
         rows = self.cursor.fetchall()
 
         if len(rows) != 0:
-            return rows[0][0], rows[0][1], rows[0][2], rows[0][3]
+            return True
         else:
-            return None
+            return False
+
+    def check_if_vote_exists_today(self, ip):
+        today = datetime.date.today()
+        self.cursor.execute("SELECT * FROM vote WHERE Date = ? AND ip = ?", (today, ip))
+        rows = self.cursor.fetchall()
+
+        if len(rows) != 0:
+            return True
+        else:
+            return False
+
+    def decide_if_raining_by_votes(self):
+        today = datetime.date.today()
+        self.cursor.execute("SELECT * FROM vote WHERE date = ? AND decision = 1", (today,))
+        yes = self.cursor.fetchall()
+
+        self.cursor.execute("SELECT * FROM vote WHERE date = ? AND decision = 0", (today,))
+        no = self.cursor.fetchall()
+
+        if len(yes) > len(no):
+            return True
+        else:
+            return False
 
     def execute_sql_query(self, query):
         self.cursor.execute(query)
