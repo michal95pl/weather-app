@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Thank You!</title>
+    <title>Vote failed!</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vote.css') }}">
 </head>
 <body>
     <div id="container">
         <div id="thank-you">
-            <h1>Thank you for your vote!</h1>
+            {% if isvoted %}
+                    <h1>You already voted!</h1>
+            {% else %}
+                    <h1>Thank you for your vote!</h1>
+            {% endif %}
             <div id="vote-container">
                 <form action="http://localhost:5050">
                     <button type="submit" class="button">Go to Main Page</button>
