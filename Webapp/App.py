@@ -1,7 +1,6 @@
 import datetime
 import threading
 import time
-
 import joblib
 import numpy as np
 import requests
@@ -51,13 +50,16 @@ def index():
 @app.route('/vote-yes', methods=['GET'])
 def vote_yes():
     db = Database()
+
+    # https://testdriven.io/tips/7e602a4e-edc5-46dd-bcc0-1be2b5a44bb6/
     visitor_ip = request.remote_addr
+
     today = datetime.date.today().strftime('%Y-%m-%d')
 
     if db.check_if_vote_exists_today(visitor_ip):
         return render_template('vote-failed.html')
     else:
-        db.execute_sql_query(f"INSERT INTO vote (date, ip, decision) VALUES ('{today}', '{visitor_ip}', 1)")
+        db.insert_single_record_vote(today, visitor_ip, 1)
 
         return render_template('vote-success.html')
 
@@ -65,13 +67,15 @@ def vote_yes():
 @app.route('/vote-no', methods=['GET'])
 def vote_no():
     db = Database()
+    # https://testdriven.io/tips/7e602a4e-edc5-46dd-bcc0-1be2b5a44bb6/
     visitor_ip = request.remote_addr
+
     today = datetime.date.today().strftime('%Y-%m-%d')
 
     if db.check_if_vote_exists_today(visitor_ip):
         return render_template('vote-failed.html')
     else:
-        db.execute_sql_query(f"INSERT INTO vote (date, ip, decision) VALUES ('{today}', '{visitor_ip}', 0)")
+        db.insert_single_record_vote(today, visitor_ip, 0)
 
         return render_template('vote-success.html')
 
@@ -105,13 +109,12 @@ def predict():
 
         try:
             prediction = model.predict(input_data)
-            prediction = prediction.tolist()
 
         except Exception as e:
             return jsonify({'error': f'Failed to make prediction: {str(e)}'}), 500
 
         return jsonify({
-            'RainToday': prediction,
+            'RainToday': prediction[0],
             'MinTemp': min_temp,
             'MaxTemp': max_temp
         })
@@ -120,8 +123,8 @@ def predict():
         return jsonify({'error': 'Failed to fetch data from OpenWeather API'}), 500
 
 
+# thread functions
 def automatic_add():
-    print("Automatic adding thread started.")
     db = Database()
     while True:
         if datetime.datetime.now().time().hour == 23 and datetime.datetime.now().time().minute > 55:
@@ -129,28 +132,13 @@ def automatic_add():
             today = datetime.date.today()
             if decision:
                 if not db.check_if_weather_exists_today():
-                    db.execute_sql_query(f"INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, "
-                                         f"WindGustSpeed, Humidity, Pressure, RainToday) VALUES "
-                                         f"({today}, "
-                                         f"{city}, "
-                                         f"{min_temp_today}, "
-                                         f"{max_temp_today}, "
-                                         f"{wind_dir_today}, "
-                                         f"{wind_speed_today}, "
-                                         f"{humidity_today}, "
-                                         f"{pressure_today}, 1")
+                    db.insert_single_record_weather(today, city, min_temp_today, max_temp_today, wind_dir_today,
+                                                    wind_speed_today, humidity_today, pressure_today, 1)
             else:
                 if not db.check_if_weather_exists_today():
-                    db.execute_sql_query(f"INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, "
-                                         f"WindGustSpeed, Humidity, Pressure, RainToday) VALUES "
-                                         f"({today}, "
-                                         f"{city}, "
-                                         f"{min_temp_today}, "
-                                         f"{max_temp_today}, "
-                                         f"{wind_dir_today}, "
-                                         f"{wind_speed_today}, "
-                                         f"{humidity_today}, "
-                                         f"{pressure_today}, 0")
+                    db.insert_single_record_weather(today, city, min_temp_today, max_temp_today, wind_dir_today,
+                                                    wind_speed_today, humidity_today, pressure_today, 0)
+
             time.sleep(7200)
         time.sleep(30)
 
@@ -164,7 +152,7 @@ def get_midday_weather_values():
     global pressure_today
 
     while True:
-        if datetime.datetime.now().time().hour == 14:
+        if datetime.datetime.now().time().hour == 14 and datetime.datetime.now().time().minute > 30:
             url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={openweather_API_KEY}&units=metric"
             response = requests.get(url)
 
@@ -179,13 +167,28 @@ def get_midday_weather_values():
                 pressure_today = data['main']['pressure']
 
                 time.sleep(7200)
+            else:
+                print("Failed to fetch data from OpenWeather API")
 
         time.sleep(30)
 
 
-if __name__ == '__main__':
-    update_thread1 = threading.Thread(target=automatic_add)
+# main loop
+def start_app():
+    print("Starting weather-value thread.. ", end="")
+    update_thread1 = threading.Thread(target=get_midday_weather_values)
     update_thread1.start()
-    update_thread2 = threading.Thread(target=get_midday_weather_values())
+    time.sleep(1.5)
+    print("DONE")
+
+    print("Starting auto-adding thread.. ", end="")
+    update_thread2 = threading.Thread(target=automatic_add)
     update_thread2.start()
+    print("DONE")
+
+    print("Starting Flask app..\n")
     app.run(host='localhost', port=5050)
+
+
+if __name__ == '__main__':
+    start_app()
