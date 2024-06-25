@@ -19,29 +19,6 @@ humidity_today = None
 pressure_today = None
 
 
-# check today weather by openweather api
-def check_today_weather_values():
-    global openweather_API_KEY
-    global city
-
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={openweather_API_KEY}&units=metric"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-
-        min_temp = data['main']['temp_min']
-        max_temp = data['main']['temp_max']
-        wind_dir = data['wind']['deg']
-        wind_speed = data['wind']['speed']
-        humidity = data['main']['humidity']
-        pressure = data['main']['pressure']
-    else:
-        return jsonify({'error': 'Failed to fetch data from OpenWeather API'}), 500
-
-    return min_temp, max_temp, wind_dir, wind_speed, humidity, pressure
-
-
 # main page
 @app.route('/')
 def index():
@@ -101,6 +78,29 @@ def vote_no():
         db.insert_single_record_vote(today, visitor_ip, 0)
 
         return render_template('vote.html')
+
+
+# check today weather by openweather api
+def check_today_weather_values():
+    global openweather_API_KEY
+    global city
+
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={openweather_API_KEY}&units=metric"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+
+        min_temp = data['main']['temp_min']
+        max_temp = data['main']['temp_max']
+        wind_dir = data['wind']['deg']
+        wind_speed = data['wind']['speed']
+        humidity = data['main']['humidity']
+        pressure = data['main']['pressure']
+    else:
+        return jsonify({'error': 'Failed to fetch data from OpenWeather API'}), 500
+
+    return min_temp, max_temp, wind_dir, wind_speed, humidity, pressure
 
 
 # rest api
