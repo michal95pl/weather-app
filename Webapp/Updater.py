@@ -2,7 +2,7 @@ import datetime
 import threading
 import time
 from Database.Database import Database
-from Webapp import WeatherApi
+from Webapp import WeatherAPI
 
 min_temp_today = None
 max_temp_today = None
@@ -40,8 +40,7 @@ def get_midday_weather_values():
     while True:
         if ((datetime.datetime.now().time().hour == 14 and datetime.datetime.now().time().minute > 30)
                 or min_temp_today is None or max_temp_today is None or wind_dir_today is None or wind_speed_today is None):
-
-            min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today = WeatherApi.check_today_weather_values()
+            min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today = WeatherAPI.check_today_weather_values()
             print("THREAD 1: Weather values are assigned.")
             time.sleep(7200)
         time.sleep(30)
@@ -57,6 +56,7 @@ def start_background_threads():
     print("Starting auto-adding thread.. ")
     update_thread2 = threading.Thread(target=automatic_add)
     update_thread2.start()
+
 
 # launch updater standalone
 if __name__ == '__main__':
