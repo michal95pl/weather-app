@@ -189,7 +189,9 @@ def get_midday_weather_values():
     global pressure_today
 
     while True:
-        if datetime.datetime.now().time().hour == 14 and datetime.datetime.now().time().minute > 30:
+        if ((datetime.datetime.now().time().hour == 14 and datetime.datetime.now().time().minute > 30)
+                or min_temp_today is None or max_temp_today is None or wind_dir_today is None or wind_speed_today is None):
+
             min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today = check_today_weather_values()
             print("THREAD 1: Weather values are assigned.")
             time.sleep(7200)
