@@ -73,11 +73,11 @@ def vote_no():
     today = datetime.date.today()
 
     if db.check_if_vote_exists_today(visitor_ip):
-        return render_template('vote.html')
+        return render_template('vote.html', isvoted=True)
     else:
         db.insert_single_record_vote(today, visitor_ip, 0)
 
-        return render_template('vote.html')
+        return render_template('vote.html', isvoted=False)
 
 
 # check today weather by openweather api
