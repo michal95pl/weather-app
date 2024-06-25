@@ -44,6 +44,8 @@ def index():
 # vote pages
 @app.route('/vote-yes', methods=['GET'])
 def vote_yes():
+    global hostname, port
+
     db = Database()
 
     # https://testdriven.io/tips/7e602a4e-edc5-46dd-bcc0-1be2b5a44bb6/
@@ -52,14 +54,16 @@ def vote_yes():
     today = datetime.date.today()
 
     if db.check_if_vote_exists_today(visitor_ip):
-        return render_template('vote.html', isvoted=True)
+        return render_template('vote.html', isvoted=True, hostname=hostname, port=port)
     else:
         db.insert_single_record_vote(today, visitor_ip, 1)
-        return render_template('vote.html', isvoted=False)
+        return render_template('vote.html', isvoted=False, hostname=hostname, port=port)
 
 
 @app.route('/vote-no', methods=['GET'])
 def vote_no():
+    global hostname, port
+
     db = Database()
 
     # https://testdriven.io/tips/7e602a4e-edc5-46dd-bcc0-1be2b5a44bb6/
@@ -68,10 +72,10 @@ def vote_no():
     today = datetime.date.today()
 
     if db.check_if_vote_exists_today(visitor_ip):
-        return render_template('vote.html', isvoted=True)
+        return render_template('vote.html', isvoted=True, hostname=hostname, port=port)
     else:
         db.insert_single_record_vote(today, visitor_ip, 0)
-        return render_template('vote.html', isvoted=False)
+        return render_template('vote.html', isvoted=False, hostname=hostname, port=port)
 
 
 # rest api

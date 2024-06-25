@@ -35,23 +35,6 @@ body {
     margin-bottom: 10px;
 }
 
-#vote-container {
-    text-align: center;
-    margin-top: 15px;
-}
-
-#vote-container button {
-    color: white;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    background-color: #333;
-}
-
-#vote-container button:hover {
-    background-color: #555;
-    transform: scale(1.05);
+#thank-you h3 {
+    font-weight: 50;
 }
