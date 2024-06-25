@@ -42,8 +42,7 @@ class Database:
 
     def insert_single_record_weather(self, date, location, mintemp, maxtemp, windgustdir, windgustspeed, humidity, pressure, raintoday):
         self.cursor.execute(
-            "INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, "
-            "RainToday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO weather (Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, Humidity, Pressure, RainToday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (date, location, mintemp, maxtemp, windgustdir, windgustspeed, humidity, pressure, raintoday)
         )
         self.connection.commit()
