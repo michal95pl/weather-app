@@ -8,15 +8,11 @@ from flask import Flask, render_template, jsonify, request
 from Database.Database import Database
 
 app = Flask(__name__)
+hostname = "localhost"
+port = 5000
+
 openweather_API_KEY = 'af498f5cac3691870fb684b490ad9408'
 city = 'Canberra'
-
-min_temp_today = None
-max_temp_today = None
-wind_dir_today = None
-wind_speed_today = None
-humidity_today = None
-pressure_today = None
 
 
 # main page
@@ -24,7 +20,7 @@ pressure_today = None
 def index():
     global city
 
-    url = f"http://localhost:5050/predict"
+    url = f"http://localhost:5000/predict"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -32,6 +28,8 @@ def index():
         min_temp = data['MinTemp']
         max_temp = data['MaxTemp']
         rain_today = data['RainToday']
+    else:
+        return "Predict API error!"
 
     db = Database()
     today = datetime.date.today() - datetime.timedelta(days=1)
@@ -41,9 +39,10 @@ def index():
 
     visitor_ip = request.remote_addr
     is_voted = db.check_if_vote_exists_today(visitor_ip)
+    temp = check_temperature_now()
 
-    return render_template('index.html', days=days, city=city, mintemp=min_temp, maxtemp=max_temp, raintoday=rain_today,
-                           isvoted=is_voted)
+    return render_template('index.html', days=days, city=city, temp=temp, raintoday=rain_today,
+                           isvoted=is_voted, hostname=hostname, port=port)
 
 
 # vote pages
@@ -103,6 +102,17 @@ def check_today_weather_values():
     return min_temp, max_temp, wind_dir, wind_speed, humidity, pressure
 
 
+def check_temperature_now():
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={openweather_API_KEY}&units=metric"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        temp = data['main']['temp']
+
+    return temp
+
+
 # rest api
 @app.route('/predict', methods=['GET'])
 def predict():
@@ -130,6 +140,14 @@ def predict():
         'MinTemp': min_temp,
         'MaxTemp': max_temp
     })
+
+
+min_temp_today = None
+max_temp_today = None
+wind_dir_today = None
+wind_speed_today = None
+humidity_today = None
+pressure_today = None
 
 
 # thread functions
@@ -178,8 +196,8 @@ def get_midday_weather_values():
         time.sleep(30)
 
 
-# main loop
-def start_app():
+# start background threads
+def start_background_threads():
     print("Starting weather-value thread.. ")
     update_thread1 = threading.Thread(target=get_midday_weather_values)
     update_thread1.start()
@@ -189,9 +207,8 @@ def start_app():
     update_thread2 = threading.Thread(target=automatic_add)
     update_thread2.start()
 
-    print("Starting Flask app..\n")
-    app.run(host='localhost', port=5050)
-
 
 if __name__ == '__main__':
-    start_app()
+    start_background_threads()
+    print("Starting Flask app..\n")
+    app.run(host=hostname, port=port)

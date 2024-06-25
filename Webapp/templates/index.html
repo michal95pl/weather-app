@@ -32,9 +32,7 @@
         </div>
 
         <div id="temperature">
-            <p class="min">{{ mintemp }}°C </p>
-            <p>/</p>
-            <p class="max"> {{ maxtemp }}°C</p>
+            <p class="temp">{{ temp }}°C </p>
         </div>
         <h3>City: {{ city }}</h3>
     </div>
@@ -45,11 +43,11 @@
             Is it true?
         </h1>
 
-        <button id="yes-button" onclick="window.location.href='http://localhost:5050/vote-yes'">
+        <button id="yes-button" onclick="window.location.href='http://{{ hostname }}:{{ port }}//vote-yes'">
             <h1>👍 Yes</h1>
         </button>
 
-        <button id="no-button" onclick="window.location.href='http://localhost:5050/vote-no'">
+        <button id="no-button" onclick="window.location.href='http://{{ hostname }}:{{ port }}/vote-no'">
             <h1>No 👎</h1>
         </button>
     </div>
@@ -57,9 +55,9 @@
 
     <div id="days-status-container">
 
-        <div id="last-title">
-            <h1>Last 5 days:</h1>
-        </div>
+<!--        <div id="last-title">-->
+<!--            <h1>Last 5 days:</h1>-->
+<!--        </div>-->
 
         <div id="days-container">
             {% for day in days %}

@@ -48,9 +48,9 @@ body {
 }
 
 #raining-emoji h1{
-    font-size: 130px;
+    font-size: 95px;
     margin-top: 1px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 #temperature {
@@ -61,9 +61,9 @@ body {
 }
 
 #temperature p {
-    font-size: 55px;
+    font-size: 45px;
     margin-top: 0;
-    margin-bottom: 9px;
+    margin-bottom: 3px;
 
 }
 
@@ -87,27 +87,22 @@ body {
 }
 
 .day p {
-    margin-top: 0;
-    font-size: 45px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.26);
+    margin-top: 14px;
+    font-size: 30px;
     border-top: 0;
     padding: 15px;
-    border: 2px solid #0a003f62;
     border-radius: 10px;
     margin-bottom: 0;
 }
 
 .day h3 {
+    padding: 1px;
     font-size: 15px;
     font-weight: 50;
 }
-.min {
+.temp {
     color: rgb(0, 0, 146);
-    margin-right: 10px;
-}
-
-.max {
-    color: rgb(105, 19, 19);
-    margin-left: 10px;
 }
 
 #vote-container {
