@@ -15,6 +15,7 @@ city = 'Canberra'
 
 gmt10 = pytz.timezone(f'Australia/{city}')
 
+
 # main page
 @app.route('/')
 def index():
@@ -32,53 +33,35 @@ def index():
     db = Database()
 
     today = datetime.datetime.today().astimezone(gmt10).date() - datetime.timedelta(days=1)
-
     last_day = today - datetime.timedelta(days=5)
-
     days = db.get_days_between(last_day, today)
 
     visitor_ip = request.remote_addr
     is_voted = db.check_if_vote_exists_today(visitor_ip)
+
     temp = WeatherAPI.check_temperature_now()
 
     return render_template('index.html', days=days, city=city, temp=temp, raintoday=rain_today,
                            isvoted=is_voted, hostname=hostname, port=port)
 
 
-# vote pages
-@app.route('/vote-yes', methods=['GET'])
-def vote_yes():
+# vote page
+@app.route('/vote', methods=['GET'])
+def vote():
     global hostname, port
 
-    db = Database()
+    decision = request.args.get('decision')
 
     # https://testdriven.io/tips/7e602a4e-edc5-46dd-bcc0-1be2b5a44bb6/
     visitor_ip = request.remote_addr
 
-    today = datetime.date.today()
-
-    if db.check_if_vote_exists_today(visitor_ip):
-        return render_template('vote.html', isvoted=True, hostname=hostname, port=port)
-    else:
-        db.insert_single_record_vote(today, visitor_ip, 1)
-        return render_template('vote.html', isvoted=False, hostname=hostname, port=port)
-
-
-@app.route('/vote-no', methods=['GET'])
-def vote_no():
-    global hostname, port
-
     db = Database()
 
-    # https://testdriven.io/tips/7e602a4e-edc5-46dd-bcc0-1be2b5a44bb6/
-    visitor_ip = request.remote_addr
-
-    today = datetime.date.today()
-
     if db.check_if_vote_exists_today(visitor_ip):
         return render_template('vote.html', isvoted=True, hostname=hostname, port=port)
     else:
-        db.insert_single_record_vote(today, visitor_ip, 0)
+        today = datetime.date.today()
+        db.insert_single_record_vote(today, visitor_ip, decision)
         return render_template('vote.html', isvoted=False, hostname=hostname, port=port)
 
 

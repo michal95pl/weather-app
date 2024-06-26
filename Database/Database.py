@@ -57,7 +57,7 @@ class Database:
     def get_days_between(self, start, end):
         self.cursor.execute("SELECT [DATE], RainToday "
                             "FROM weather WHERE Date BETWEEN ? AND ? "
-                            "ORDER BY Date ASC", (start, end))
+                            "ORDER BY Date DESC LIMIT 5", (start, end))
         rows = self.cursor.fetchall()
         days = []
         for row in rows:
@@ -70,20 +70,20 @@ class Database:
         self.cursor.execute("SELECT * FROM weather WHERE Date = ?", (today,))
         rows = self.cursor.fetchall()
 
-        if len(rows) != 0:
-            return True
-        else:
+        if len(rows) == 0:
             return False
+        else:
+            return True
 
     def check_if_vote_exists_today(self, ip):
         today = datetime.date.today()
         self.cursor.execute("SELECT * FROM vote WHERE Date = ? AND ip = ?", (today, ip))
         rows = self.cursor.fetchall()
 
-        if len(rows) != 0:
-            return True
-        else:
+        if len(rows) == 0:
             return False
+        else:
+            return True
 
     def decide_if_raining_by_votes(self):
         today = datetime.date.today()
