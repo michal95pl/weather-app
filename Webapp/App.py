@@ -85,9 +85,11 @@ def predict():
 
     min_temp, max_temp, wind_dir, wind_speed, humidity, pressure = WeatherAPI.check_today_weather_values()
 
-    input_data = np.array([[min_temp, max_temp, wind_dir, wind_speed, humidity, pressure]])
+    month = datetime.datetime.now().month
 
-    filename = '../WeatherModel.pkl'
+    input_data = np.array([[min_temp, max_temp, wind_dir, wind_speed, humidity, pressure, month]])
+
+    filename = '../model.pkl'
     try:
         model = joblib.load(filename)
     except Exception as e:

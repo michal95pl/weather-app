@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3 as sql
 
+
 class Dataset:
     def __init__(self):
         self.__conn = sql.connect("../weather.db")
@@ -8,6 +9,7 @@ class Dataset:
         self.__data = pd.read_sql_query("SELECT * FROM weather", self.__conn)
         self.__data = self.__data.dropna()
 
+        self.__data["Month"] = self.__data["Date"].apply(lambda x: int(x[5:7]))
 
     def __del__(self):
         self.__conn.close()
