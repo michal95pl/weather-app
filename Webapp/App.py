@@ -5,6 +5,7 @@ import requests
 from flask import Flask, render_template, jsonify, request
 from Database.Database import Database
 from Webapp import WeatherAPI, Updater
+import pytz
 
 app = Flask(__name__)
 hostname = "localhost"
@@ -12,6 +13,7 @@ port = 5000
 
 city = 'Canberra'
 
+gmt10 = pytz.timezone(f'Australia/{city}')
 
 # main page
 @app.route('/')
@@ -28,7 +30,9 @@ def index():
         return "Predict API error!"
 
     db = Database()
-    today = datetime.date.today() - datetime.timedelta(days=1)
+
+    today = datetime.datetime.today().astimezone(gmt10).date() - datetime.timedelta(days=1)
+
     last_day = today - datetime.timedelta(days=5)
 
     days = db.get_days_between(last_day, today)
