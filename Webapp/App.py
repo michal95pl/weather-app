@@ -112,6 +112,6 @@ def predict():
 
 
 if __name__ == '__main__':
-    Updater.start_background_threads()
+    Updater.start()
     print("Starting Flask app..\n")
     app.run(host=hostname, port=port)

@@ -15,49 +15,45 @@ city = "Canberra"
 
 
 # thread functions
-def automatic_add():
+def automatic_add(db: Database):
     global min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today
 
-    db = Database()
-    while True:
-        if datetime.datetime.now().time().hour == 23 and datetime.datetime.now().time().minute > 55:
-            decision = db.decide_if_raining_by_votes()
-            today = datetime.date.today()
+    if datetime.datetime.now().time().hour == 23 and datetime.datetime.now().time().minute > 55:
+        decision = db.decide_if_raining_by_votes()
+        today = datetime.date.today()
 
-            if not db.check_if_weather_exists_today():
-                decision_value = 1 if decision else 0
-                db.insert_single_record_weather(today, city, min_temp_today, max_temp_today, wind_dir_today,
-                                                wind_speed_today, humidity_today, pressure_today, decision_value)
-                print("THREAD 2: Weather record was added.")
-
-            time.sleep(7200)
-        time.sleep(30)
+        if not db.check_if_weather_exists_today():
+            decision_value = 1 if decision else 0
+            db.insert_single_record_weather(today, city, min_temp_today, max_temp_today, wind_dir_today,
+                                            wind_speed_today, humidity_today, pressure_today, decision_value)
+            print("THREAD 1: Weather record was added.")
 
 
 def get_midday_weather_values():
     global min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today
 
+    if ((datetime.datetime.now().time().hour == 14 and datetime.datetime.now().time().minute > 30)
+            or min_temp_today is None or max_temp_today is None or wind_dir_today is None or wind_speed_today is None):
+        min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today = WeatherAPI.check_today_weather_values()
+        print("THREAD 1: Weather values are assigned.")
+
+
+def background_thread():
+
+    print("Thread started\n")
+
+    db = Database()
+
     while True:
-        if ((datetime.datetime.now().time().hour == 14 and datetime.datetime.now().time().minute > 30)
-                or min_temp_today is None or max_temp_today is None or wind_dir_today is None or wind_speed_today is None):
-            min_temp_today, max_temp_today, wind_dir_today, wind_speed_today, humidity_today, pressure_today = WeatherAPI.check_today_weather_values()
-            print("THREAD 1: Weather values are assigned.")
-            time.sleep(7200)
-        time.sleep(30)
+        automatic_add(db)
+        get_midday_weather_values()
+        time.sleep(60)
 
 
-# start background threads
-def start_background_threads():
-    print("Starting weather-value thread.. ")
-    update_thread1 = threading.Thread(target=get_midday_weather_values)
-    update_thread1.start()
-    time.sleep(2.5)
-
-    print("Starting auto-adding thread.. ")
-    update_thread2 = threading.Thread(target=automatic_add)
-    update_thread2.start()
+def start():
+    threading.Thread(target=background_thread).start()
 
 
 # launch updater standalone
 if __name__ == '__main__':
-    start_background_threads()
+    start()
