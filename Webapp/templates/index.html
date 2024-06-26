@@ -40,14 +40,14 @@
     {% if not isvoted %}
     <div id="vote-container">
         <h1>
-            Is it true?
+            Is it raining?
         </h1>
 
-        <button id="yes-button" onclick="window.location.href='http://{{ hostname }}:{{ port }}//vote-yes'">
+        <button id="yes-button" onclick="window.location.href='http://{{ hostname }}:{{ port }}/vote?decision=1'">
             <h1>👍 Yes</h1>
         </button>
 
-        <button id="no-button" onclick="window.location.href='http://{{ hostname }}:{{ port }}/vote-no'">
+        <button id="no-button" onclick="window.location.href='http://{{ hostname }}:{{ port }}/vote?decision=0'">
             <h1>No 👎</h1>
         </button>
     </div>
