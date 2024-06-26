@@ -4,6 +4,5 @@ requests
 Flask
 pandas
 scikit-learn
-sqlite3
-matplotlib
 seaborn
+matplotlib
