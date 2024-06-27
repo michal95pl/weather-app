@@ -21,9 +21,5 @@ class Dataset:
         print(corr_matrix["RainToday"].sort_values(ascending=False))
         print()
 
-    def get_locations(self):
-        return self.__data["Location"].unique()
-
-    def get_data_by_location(self, location: str) -> pd.DataFrame:
-        data = self.__data[self.__data["Location"] == location]
-        return data
+    def get_data(self) -> pd.DataFrame:
+        return self.__data
