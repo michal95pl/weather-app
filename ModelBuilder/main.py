@@ -5,13 +5,9 @@ from Model import Model
 
 from time import sleep
 
-from statistics import median
-
 if __name__ == "__main__":
     dataset = Dataset()
     dataset.show_correlation()
-
-    F1_scores = []
 
     for location in dataset.get_locations():
 
@@ -29,16 +25,9 @@ if __name__ == "__main__":
 
         model = Model()
         model.fit(X_train, y_train)
-        model.show_statistics(X_test, y_test, location)
-
-        F1_scores.append(model.get_F1_score(X_test, y_test))
+        #model.show_statistics(X_test, y_test)
 
         model.save_model(f"../models/{location}.pkl")
 
         print("\n\n\n")
-
-        sleep(0.5)
-
-    print("F1-score median:", median(F1_scores))
-
 
