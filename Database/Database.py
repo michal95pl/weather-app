@@ -30,6 +30,15 @@ class Database:
         """
         self.cursor.execute(querry)
 
+        querry = """
+                CREATE TABLE IF NOT EXISTS vote (
+                    [date] TEXT,
+                    ip TEXT,
+                    decision INTEGER
+                );
+                """
+        self.cursor.execute(querry)
+
     # data - dictionary [Date, Location, MinTemp, MaxTemp, WindGustDir, WindGustSpeed, RainToday, RainTomorrow, Humidity, Pressure]
     def insert_data(self, data):
         for row in data:
